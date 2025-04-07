@@ -1,3 +1,6 @@
+import { Sequelize } from "sequelize"
+import db from "../models"
+
 export async function getProducts(req, res ){
     res.status(200).json({
         message: 'Get list product success'
@@ -19,7 +22,13 @@ export async function getProductsById(req, res ){
     })
 }
 export async function addProducts(req, res ){
+   try {
+    console.log(req.params);
     res.status(200).json({
         message: 'Add product success'
     })
+} catch {
+
+    }
+   
 }
