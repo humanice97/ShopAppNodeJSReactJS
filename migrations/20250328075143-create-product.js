@@ -13,12 +13,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        unique: true,
         type: Sequelize.STRING
       },
       price: {
+        defaultValue: 0,
         type: Sequelize.INTEGER
       },
       old_price: {
+        defaultValue: 0,
         type: Sequelize.INTEGER
       },
       image: {
@@ -31,9 +34,11 @@ module.exports = {
         type: Sequelize.TEXT
       },
       buy_turn: {
+        defaultValue: 0,
         type: Sequelize.INTEGER
       },
       quantity: {
+        defaultValue: 0,
         type: Sequelize.INTEGER
       },
       brand_id: {
@@ -63,6 +68,13 @@ module.exports = {
         defaultValue: Sequelize.NOW
       }
     });
+    await queryInterface.sequelize.query(`
+      ALTER TABLE products
+      ADD CONSTRAINT chk_price CHECK (price >= 0),
+      ADD CONSTRAINT chk_old_price CHECK (old_price >= 0),
+      ADD CONSTRAINT chk_quantity CHECK (quantity >= 0),
+      ADD CONSTRAINT chk_buy_turn CHECK (buy_turn >= 0)
+    `);
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('products');

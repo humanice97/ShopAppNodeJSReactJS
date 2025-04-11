@@ -1,4 +1,7 @@
-export async function getOrders(req, res) {
+import { Sequelize } from "sequelize"
+import db from "../models"
+
+export async function getOrder(req, res) {
     res.status(200).json({
         message: 'Get list order success'
     });

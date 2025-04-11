@@ -9,28 +9,28 @@ import * as OrderDetailController from './controllers/OrderDetailController';
 
 export function AppRoute(app) {
     // Product
-    router.get('/products', ProductController.getProducts);
-    router.get('/products/:id', ProductController.getProductsById);
-    router.post('/products', ProductController.addProducts);
-    router.delete('/products/:id', ProductController.deleteProductsById);
-    router.put('/products/:id', ProductController.updateProductsById);
+    router.get('/products', ProductController.getProduct);
+    router.get('/products/:id', ProductController.getProductById);
+    router.post('/products', ProductController.addProduct);
+    router.delete('/products/:id', ProductController.deleteProductById);
+    router.put('/products/:id', ProductController.updateProductById);
     
     // Category
-    router.get('/categories', CategoryController.getCategories);
+    router.get('/categories', CategoryController.getCategory);
     router.get('/categories/:id', CategoryController.getCategoryById);
     router.post('/categories', CategoryController.addCategory);
     router.delete('/categories/:id', CategoryController.deleteCategoryById);
     router.put('/categories/:id', CategoryController.updateCategoryById);
 
     // Brand
-    router.get('/brands', BrandController.getBrands);
+    router.get('/brands', BrandController.getBrand);
     router.get('/brands/:id', BrandController.getBrandById);
     router.post('/brands', BrandController.addBrand);
     router.delete('/brands/:id', BrandController.deleteBrandById);
     router.put('/brands/:id', BrandController.updateBrandById);
 
     // Order
-    router.get('/orders', OrderController.getOrders);
+    router.get('/orders', OrderController.getOrder);
     router.get('/orders/:id', OrderController.getOrderById);
     router.post('/orders', OrderController.addOrder);
     router.delete('/orders/:id', OrderController.deleteOrderById);
@@ -38,10 +38,10 @@ export function AppRoute(app) {
 
     // Order Detail
     router.get('/order-details', OrderDetailController.getOrderDetails);
-    router.get('/order-details/:id', OrderDetailController.getOrderDetailById);
-    router.post('/order-details', OrderDetailController.addOrderDetail);
-    router.delete('/order-details/:id', OrderDetailController.deleteOrderDetailById);
-    router.put('/order-details/:id', OrderDetailController.updateOrderDetailById);
+    router.get('/order-details/:id', OrderDetailController.getOrderDetailsById);
+    router.post('/order-details', OrderDetailController.addOrderDetails);
+    router.delete('/order-details/:id', OrderDetailController.deleteOrderDetailsById);
+    router.put('/order-details/:id', OrderDetailController.updateOrderDetailsById);
 
     app.use('/api/', router);
 }
