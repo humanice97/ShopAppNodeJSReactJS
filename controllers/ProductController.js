@@ -31,16 +31,9 @@ export async function addProduct(req, res) {
             error: error.details
         });
     }
-    try {
         const product = await db.Product.create(req.body)
         return res.status(201).json({
             message: 'Add product success',
             data: product
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: 'Add product failed',
-            error: error
-        })
-    }
 }

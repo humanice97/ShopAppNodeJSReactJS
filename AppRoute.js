@@ -6,26 +6,26 @@ import * as CategoryController from './controllers/CategoryController';
 import * as BrandController from './controllers/BrandController';
 import * as OrderController from './controllers/OrderController';
 import * as OrderDetailController from './controllers/OrderDetailController';
-
+import asyncHander from './middlewares/asyncHandler';
 export function AppRoute(app) {
     // Product
     router.get('/products', ProductController.getProduct);
     router.get('/products/:id', ProductController.getProductById);
-    router.post('/products', ProductController.addProduct);
+    router.post('/products', asyncHander(ProductController.addProduct));
     router.delete('/products/:id', ProductController.deleteProductById);
     router.put('/products/:id', ProductController.updateProductById);
     
     // Category
     router.get('/categories', CategoryController.getCategory);
     router.get('/categories/:id', CategoryController.getCategoryById);
-    router.post('/categories', CategoryController.addCategory);
+    router.post('/categories', asyncHander(CategoryController.addCategory));
     router.delete('/categories/:id', CategoryController.deleteCategoryById);
     router.put('/categories/:id', CategoryController.updateCategoryById);
 
     // Brand
     router.get('/brands', BrandController.getBrand);
     router.get('/brands/:id', BrandController.getBrandById);
-    router.post('/brands', BrandController.addBrand);
+    router.post('/brands', asyncHander(BrandController.addBrand));
     router.delete('/brands/:id', BrandController.deleteBrandById);
     router.put('/brands/:id', BrandController.updateBrandById);
 
