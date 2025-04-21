@@ -6,42 +6,47 @@ import * as CategoryController from './controllers/CategoryController';
 import * as BrandController from './controllers/BrandController';
 import * as OrderController from './controllers/OrderController';
 import * as OrderDetailController from './controllers/OrderDetailController';
-import asyncHander from './middlewares/asyncHandler';
+import asyncHandler from './middlewares/asyncHandler';
+import validate from './middlewares/validate';
+import InsertProductRequests from './dtos/requests/InsertProductRequests';
+
 export function AppRoute(app) {
     // Product
-    router.get('/products', ProductController.getProduct);
-    router.get('/products/:id', ProductController.getProductById);
-    router.post('/products', asyncHander(ProductController.addProduct));
-    router.delete('/products/:id', ProductController.deleteProductById);
-    router.put('/products/:id', ProductController.updateProductById);
+    router.get('/products', asyncHandler(ProductController.getProduct));
+    router.get('/products/:id', asyncHandler(ProductController.getProductById));
+    router.post('/products',
+        validate(InsertProductRequests),
+        asyncHandler(ProductController.addProduct));
+    router.delete('/products/:id', asyncHandler(ProductController.deleteProductById));
+    router.put('/products/:id', asyncHandler(ProductController.updateProductById));
     
     // Category
-    router.get('/categories', CategoryController.getCategory);
-    router.get('/categories/:id', CategoryController.getCategoryById);
-    router.post('/categories', asyncHander(CategoryController.addCategory));
-    router.delete('/categories/:id', CategoryController.deleteCategoryById);
-    router.put('/categories/:id', CategoryController.updateCategoryById);
+    router.get('/categories', asyncHandler(CategoryController.getCategory));
+    router.get('/categories/:id', asyncHandler(CategoryController.getCategoryById));
+    router.post('/categories', asyncHandler(CategoryController.addCategory));
+    router.delete('/categories/:id', asyncHandler(CategoryController.deleteCategoryById));
+    router.put('/categories/:id', asyncHandler(CategoryController.updateCategoryById));
 
     // Brand
-    router.get('/brands', BrandController.getBrand);
-    router.get('/brands/:id', BrandController.getBrandById);
-    router.post('/brands', asyncHander(BrandController.addBrand));
-    router.delete('/brands/:id', BrandController.deleteBrandById);
-    router.put('/brands/:id', BrandController.updateBrandById);
+    router.get('/brands', asyncHandler(BrandController.getBrand));
+    router.get('/brands/:id', asyncHandler(BrandController.getBrandById));
+    router.post('/brands', asyncHandler(BrandController.addBrand));
+    router.delete('/brands/:id', asyncHandler(BrandController.deleteBrandById));
+    router.put('/brands/:id', asyncHandler(BrandController.updateBrandById));
 
     // Order
-    router.get('/orders', OrderController.getOrder);
-    router.get('/orders/:id', OrderController.getOrderById);
-    router.post('/orders', OrderController.addOrder);
-    router.delete('/orders/:id', OrderController.deleteOrderById);
-    router.put('/orders/:id', OrderController.updateOrderById);
+    router.get('/orders', asyncHandler(OrderController.getOrder));
+    router.get('/orders/:id', asyncHandler(OrderController.getOrderById));
+    router.post('/orders', asyncHandler(OrderController.addOrder));
+    router.delete('/orders/:id', asyncHandler(OrderController.deleteOrderById));
+    router.put('/orders/:id', asyncHandler(OrderController.updateOrderById));
 
     // Order Detail
-    router.get('/order-details', OrderDetailController.getOrderDetails);
-    router.get('/order-details/:id', OrderDetailController.getOrderDetailsById);
-    router.post('/order-details', OrderDetailController.addOrderDetails);
-    router.delete('/order-details/:id', OrderDetailController.deleteOrderDetailsById);
-    router.put('/order-details/:id', OrderDetailController.updateOrderDetailsById);
+    router.get('/order-details', asyncHandler(OrderDetailController.getOrderDetails));
+    router.get('/order-details/:id', asyncHandler(OrderDetailController.getOrderDetailsById));
+    router.post('/order-details', asyncHandler(OrderDetailController.addOrderDetails));
+    router.delete('/order-details/:id', asyncHandler(OrderDetailController.deleteOrderDetailsById));
+    router.put('/order-details/:id', asyncHandler(OrderDetailController.updateOrderDetailsById));
 
-    app.use('/api/', router);
+    app.use('/api', router);
 }
