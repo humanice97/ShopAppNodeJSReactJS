@@ -9,19 +9,26 @@ import * as OrderDetailController from './controllers/OrderDetailController';
 import asyncHandler from './middlewares/asyncHandler';
 import validate from './middlewares/validate';
 import InsertProductRequests from './dtos/requests/InsertProductRequests';
+import paginate from './middlewares/paginate';
 
 export function AppRoute(app) {
     // Product
-    router.get('/products', asyncHandler(ProductController.getProduct));
-    router.get('/products/:id', asyncHandler(ProductController.getProductById));
+    router.get('/products',
+        paginate(5),
+        asyncHandler(ProductController.getProduct));
+    router.get('/products/:id',
+        paginate(5),
+        asyncHandler(ProductController.getProductById));
     router.post('/products',
         validate(InsertProductRequests),
         asyncHandler(ProductController.addProduct));
     router.delete('/products/:id', asyncHandler(ProductController.deleteProductById));
     router.put('/products/:id', asyncHandler(ProductController.updateProductById));
-    
+
     // Category
-    router.get('/categories', asyncHandler(CategoryController.getCategory));
+    router.get('/categories',
+        paginate(5),
+        asyncHandler(CategoryController.getCategory));
     router.get('/categories/:id', asyncHandler(CategoryController.getCategoryById));
     router.post('/categories', asyncHandler(CategoryController.addCategory));
     router.delete('/categories/:id', asyncHandler(CategoryController.deleteCategoryById));
