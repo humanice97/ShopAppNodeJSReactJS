@@ -17,7 +17,7 @@ export function AppRoute(app) {
         paginate(5),
         asyncHandler(ProductController.getProduct));
     router.get('/products/:id',
-        paginate(5),
+        paginate(1),
         asyncHandler(ProductController.getProductById));
     router.post('/products',
         validate(InsertProductRequests),
@@ -29,14 +29,20 @@ export function AppRoute(app) {
     router.get('/categories',
         paginate(5),
         asyncHandler(CategoryController.getCategory));
-    router.get('/categories/:id', asyncHandler(CategoryController.getCategoryById));
+    router.get('/categories/:id',
+        paginate(1),
+        asyncHandler(CategoryController.getCategoryById));
     router.post('/categories', asyncHandler(CategoryController.addCategory));
     router.delete('/categories/:id', asyncHandler(CategoryController.deleteCategoryById));
     router.put('/categories/:id', asyncHandler(CategoryController.updateCategoryById));
 
     // Brand
-    router.get('/brands', asyncHandler(BrandController.getBrand));
-    router.get('/brands/:id', asyncHandler(BrandController.getBrandById));
+    router.get('/brands',
+        paginate(5),
+        asyncHandler(BrandController.getBrand));
+    router.get('/brands/:id',
+        paginate(1),
+        asyncHandler(BrandController.getBrandById));
     router.post('/brands', asyncHandler(BrandController.addBrand));
     router.delete('/brands/:id', asyncHandler(BrandController.deleteBrandById));
     router.put('/brands/:id', asyncHandler(BrandController.updateBrandById));
