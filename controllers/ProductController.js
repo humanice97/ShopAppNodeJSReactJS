@@ -42,21 +42,45 @@ export async function getProduct(req, res) {
     });
 }
 
-// Cập nhật sản phẩm theo id (đang để trống logic xử lý)
+// Cập nhật sản phẩm theo id 
 export async function updateProductById(req, res) {
-    // TODO: Thêm logic cập nhật sản phẩm tại đây
-    res.status(200).json({
+    const { id } = req.params;
+    // Cập nhật sản phẩm theo id
+    const [updatedRows] = await db.Product.update(req.body, {
+      where: { id }
+    });
+  
+    if (updatedRows > 0) {
+      return res.status(200).json({
         message: 'Update product success'
-    });
-}
+      });
+    } else {
+      return res.status(404).json({
+        message: 'Product not found or no changes applied'
+      });
+    }
+  }
+  
 
-// Xóa sản phẩm theo id (đang để trống logic xử lý)
+// Xóa sản phẩm theo id
 export async function deleteProductById(req, res) {
-    // TODO: Thêm logic xóa sản phẩm tại đây
-    res.status(200).json({
-        message: 'Delete product success'
+    const { id } = req.params;
+    // Xóa sản phẩm theo id
+    const deleted = await db.Product.destroy({
+      where: { id }
     });
-}
+  
+    if (deleted > 0) {
+      return res.status(200).json({
+        message: 'Delete product success'
+      });
+    } else {
+      return res.status(404).json({
+        message: 'Product not found'
+      });
+    }
+  }
+  
 
 // Lấy thông tin sản phẩm theo id
 export async function getProductById(req, res) {

@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-class InsertProductRequests {
+class InsertProductRequest {
     constructor(data) {
         this.name = data.name;
         this.price = data.price;
@@ -29,4 +29,4 @@ class InsertProductRequests {
         return schema.validate(data)
     }
 }
-export default InsertProductRequests;
+export default InsertProductRequest;

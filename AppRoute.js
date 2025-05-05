@@ -2,16 +2,24 @@ import express from 'express';
 const router = express.Router();
 
 import * as ProductController from './controllers/ProductController';
+import * as UserController from './controllers/UserController';
 import * as CategoryController from './controllers/CategoryController';
 import * as BrandController from './controllers/BrandController';
 import * as OrderController from './controllers/OrderController';
 import * as OrderDetailController from './controllers/OrderDetailController';
 import asyncHandler from './middlewares/asyncHandler';
 import validate from './middlewares/validate';
-import InsertProductRequests from './dtos/requests/InsertProductRequests';
+import InsertProductRequest from './dtos/requests/product/InsertProductRequest';
+import UpdateProductRequest from './dtos/requests/product/UpdateProductRequest';
 import paginate from './middlewares/paginate';
+import InsertOrderRequest from './dtos/requests/order/InsertOrderRequest';
+import InsertUserRequest from './dtos/requests/user/InsertUserRequest';
 
 export function AppRoute(app) {
+    //User
+    router.post('/users',
+        validate(InsertUserRequest),
+        asyncHandler(UserController.addUser));
     // Product
     router.get('/products',
         paginate(5),
@@ -20,10 +28,12 @@ export function AppRoute(app) {
         paginate(1),
         asyncHandler(ProductController.getProductById));
     router.post('/products',
-        validate(InsertProductRequests),
+        validate(InsertProductRequest),
         asyncHandler(ProductController.addProduct));
     router.delete('/products/:id', asyncHandler(ProductController.deleteProductById));
-    router.put('/products/:id', asyncHandler(ProductController.updateProductById));
+    router.put('/products/:id', 
+        validate(UpdateProductRequest),
+        asyncHandler(ProductController.updateProductById));
 
     // Category
     router.get('/categories',
@@ -50,7 +60,9 @@ export function AppRoute(app) {
     // Order
     router.get('/orders', asyncHandler(OrderController.getOrder));
     router.get('/orders/:id', asyncHandler(OrderController.getOrderById));
-    router.post('/orders', asyncHandler(OrderController.addOrder));
+    router.post('/orders', 
+        validate(InsertOrderRequest),
+        asyncHandler(OrderController.addOrder));
     router.delete('/orders/:id', asyncHandler(OrderController.deleteOrderById));
     router.put('/orders/:id', asyncHandler(OrderController.updateOrderById));
 
