@@ -11,7 +11,7 @@ export async function getOrderDetails(req, res) {
 
 export async function updateOrderDetailsById(req, res) {
     const { id } = req.params
-    const [updated] = await db.OrderDetail.update({
+    const [updated] = await db.OrderDetail.update(req.body, {
         where: { id }
     })
     if (updated > 0) {

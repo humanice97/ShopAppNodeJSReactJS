@@ -9,7 +9,7 @@ export async function getOrder(req, res) {
 
 export async function updateOrderById(req, res) {
     const { id } = req.params
-    const [updated] = await db.Order.update({
+    const [updated] = await db.Order.update(req.body, {
         where: { id }
     });
     if (updated > 0) {
@@ -55,9 +55,22 @@ export async function getOrderById(req, res) {
 }
 
 export async function addOrder(req, res) {
+    const userId = req.body.user_id
+    const existingUser = await db.User.findByPk(userId)
+    if (!existingUser) {
+        return res.status(404).json({
+            message: 'Insert order fail because not exists user',
+        })
+    } 
     const newOrder = await db.Order.create(req.body)
-    return res.status(201).json({
-        message: 'Insert order success',
-        data: newOrder
-    })
+    if (newOrder) {
+        return res.status(201).json({
+            message: 'Insert order success',
+            data: newOrder
+        })
+    } else {
+        res.status(404).json({
+            message: 'Insert order fail',
+        })
+    }
 }

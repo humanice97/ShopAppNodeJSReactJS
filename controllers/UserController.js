@@ -1,5 +1,6 @@
 import db from "../models";
 import ResponseUser from '../dtos/responses/user/ResponseUser'
+import argon2 from 'argon2'
 import InsertUserRequest from "../dtos/requests/user/InsertUserRequest";
 export async function updateUserById(req, res) {
     const { id } = req.params;
@@ -27,14 +28,16 @@ export async function addUser(req, res) {
             message: 'Email has been used'
         })
     }
-    const user = await db.User.create(new InsertUserRequest(req.body))
+    const userRequest = new InsertUserRequest(req.body)
+    await userRequest.init(req.body)
+    const user = await db.User.create(userRequest)
     if (user) {
-        return res.status(201).json({
+        res.status(201).json({
             message: 'Add user success',
             data: new ResponseUser(user)
         });
     } else {
-        return res.status(404).json({
+        res.status(404).json({
             message: 'Add user fail',
         });
     }

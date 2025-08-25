@@ -66,7 +66,7 @@ export async function updateProductById(req, res) {
 export async function deleteProductById(req, res) {
     const { id } = req.params;
     // Xóa sản phẩm theo id
-    const deleted = await db.Product.destroy({
+    const [deleted] = await db.Product.destroy({
       where: { id }
     });
   

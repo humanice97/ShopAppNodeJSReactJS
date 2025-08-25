@@ -1,17 +1,27 @@
+import argon2 from 'argon2';
 import Joi from 'joi';
 // import bcrypt from 'bcryptjs';
 
 class InsertUserRequest {
     constructor(data) {
         this.email = data.email;
-        this.password = this.encryptPassword(data.password);
+        this.password = null;
         this.name = data.name;
         this.role = data.role;
         this.avatar = data.avatar;
         this.phone = data.phone;
     }
-    encryptPassword(password) {
-        return 'password'
+    async encryptPassword(password) {
+        try{
+            return await argon2.hash(password)
+        } catch (error) {
+            console.error('error hash: ', error);
+            throw error
+        }
+    }
+    async init(data) {
+        this.password = await this.encryptPassword(data.password)
+        return this
     }
     static validate(data) {
         const schema = Joi.object({
