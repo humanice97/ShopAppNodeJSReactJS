@@ -153,7 +153,7 @@ router.put('/banner-details/:id',
 
 ///// upload ảnh
 router.post("/upload/images",
-  uploadMultiple.array("images", 5), // tối đa 1 ảnh
+  uploadMultiple.array("images", 5), // tối đa 5 ảnh
   asyncHandler(UploadImageAppWriteController.uploadMultipleImages)
 );
     app.use('/api', router);
