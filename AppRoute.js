@@ -9,9 +9,13 @@ import * as OrderController from './controllers/OrderController';
 import * as OrderDetailController from './controllers/OrderDetailController';
 import * as NewsController from './controllers/NewsController'
 import * as NewsDetailController from './controllers/NewsDetailController'
+import * as BannerController from './controllers/BannerController'
+import * as BannerDetailController from './controllers/BannerDetailController'
+import * as UploadImageAppWriteController from "./controllers/ImageController"
 import asyncHandler from './middlewares/asyncHandler';
 import validate from './middlewares/validate';
 import paginate from './middlewares/paginate';
+import uploadMultiple from './middlewares/uploadImage'
 import InsertProductRequest from './dtos/requests/product/InsertProductRequest';
 import UpdateProductRequest from './dtos/requests/product/UpdateProductRequest';
 import InsertOrderRequest from './dtos/requests/order/InsertOrderRequest';
@@ -20,6 +24,9 @@ import InsertUserRequest from './dtos/requests/user/InsertUserRequest';
 import InsertNewsRequest from './dtos/requests/news/InsertNewsRequest';
 import UpdateNewsRequest from './dtos/requests/news/UpdateNewsRequest';
 import InsertNewsDetailRequest from './dtos/requests/news-detail/InsertNewsDetailRequest';
+import InsertBannerRequest from './dtos/requests/banner/InsertBannerRequest';
+import UpdateBannerRequest from './dtos/requests/banner/UpdateBannerRequest';
+import InsertBannerDetailRequest from './dtos/requests/banner-detail/InsertBannerDetailRequest';
 
 export function AppRoute(app) {
     // News
@@ -105,6 +112,49 @@ export function AppRoute(app) {
         asyncHandler(NewsDetailController.addNewsDetail));
     router.delete('/news-details/:id', asyncHandler(NewsDetailController.deleteNewsDetailById));
     router.put('/news-details/:id', asyncHandler(NewsDetailController.updateNewsDetailById));
+    // Banner
+router.get('/banner',
+    paginate(5),
+    asyncHandler(BannerController.getBanner));
 
+router.get('/banner/:id',
+    paginate(1),
+    asyncHandler(BannerController.getBannerById));
+
+router.post('/banner',
+    validate(InsertBannerRequest),
+    asyncHandler(BannerController.addBanner));
+
+router.delete('/banner/:id',
+    asyncHandler(BannerController.deleteBannerById));
+
+router.put('/banner/:id',
+    validate(UpdateBannerRequest),
+    asyncHandler(BannerController.updateBannerById));
+
+    // Banner Detail
+router.get('/banner-details',
+    paginate(5),
+    asyncHandler(BannerDetailController.getBannerDetail));
+
+router.get('/banner-details/:id',
+    asyncHandler(BannerDetailController.getBannerDetailById));
+
+router.post('/banner-details',
+    validate(InsertBannerDetailRequest),
+    asyncHandler(BannerDetailController.addBannerDetail));
+
+router.delete('/banner-details/:id',
+    asyncHandler(BannerDetailController.deleteBannerDetailById));
+
+router.put('/banner-details/:id',
+    asyncHandler(BannerDetailController.updateBannerDetailById));
+
+
+///// upload ảnh
+router.post("/upload/images",
+  uploadMultiple.array("images", 5), // tối đa 1 ảnh
+  asyncHandler(UploadImageAppWriteController.uploadMultipleImages)
+);
     app.use('/api', router);
 }
