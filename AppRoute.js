@@ -156,5 +156,9 @@ router.post("/upload/images",
   uploadMultiple.array("images", 5), // tối đa 5 ảnh
   asyncHandler(UploadImageAppWriteController.uploadMultipleImages)
 );
+/// delete ảnh
+router.delete("/delete",
+  asyncHandler(UploadImageAppWriteController.deleteImages)
+);
     app.use('/api', router);
 }

@@ -41,3 +41,34 @@ export const uploadMultipleImages = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+const parseUrl = (url) => {
+    const match = url.match(/buckets\/([^/]+)\/files\/([^/]+)/);
+    return match ? { bucketId: match[1], fileId: match[2] } : null;
+};
+
+export const deleteImages = async (req, res) => {
+        const {data} = req.body
+        const deletePromises = data.map(item => {
+    
+            const bucketId = parseUrl(item.url);
+            
+            if (!bucketId) {
+                console.log(`❌ Bỏ qua file ${item.name} vì URL không hợp lệ`);
+                return null;
+            }
+
+            console.log(`🗑️ Đang xóa file: ${item.name} | Bucket: ${bucketId} | ID: ${item.fileId}`);
+            
+            // Gọi lệnh xóa
+            return storage.deleteFile(bucketId, item.fileId);
+            
+        });
+
+        // Lọc bỏ các giá trị null (nếu có URL lỗi) và chờ xóa xong
+        await Promise.all(deletePromises.filter(p => p !== null));
+        return res.status(200).json({
+            success: true,
+            message: `Xóa ảnh thành công!`,
+        });
+
+}
