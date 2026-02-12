@@ -27,7 +27,7 @@ export const uploadMultipleImages = async (req, res) => {
         const data = results.map(file => ({
             fileId: file.$id,
             name: file.name,
-            url: `https://cloud.appwrite.io/v1/storage/buckets/${process.env.APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.APPWRITE_PROJECT_ID}`
+            url: `${process.env.APPWRITE_ENDPOINT}/storage/buckets/${process.env.APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.APPWRITE_PROJECT_ID}`
         }));
 
         return res.status(201).json({
@@ -48,6 +48,12 @@ const parseUrl = (url) => {
 
 export const deleteImages = async (req, res) => {
         const {data} = req.body
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Không tìm thấy dữ liệu ảnh (File not found)",
+            });
+        }
         const deletePromises = data.map(item => {
     
             const bucketId = parseUrl(item.url);
@@ -60,7 +66,12 @@ export const deleteImages = async (req, res) => {
             console.log(`🗑️ Đang xóa file: ${item.name} | Bucket: ${bucketId} | ID: ${item.fileId}`);
             
             // Gọi lệnh xóa
-            return storage.deleteFile(bucketId, item.fileId);
+            return storage.deleteFile(bucketId, item.fileId)
+            .catch(err => {
+                // Chỉ log lỗi để biết, không throw lỗi ra ngoài middleware
+                console.error(`⚠️ Không xóa được file ${item.name}: ${err.message}`);
+                return null; 
+            });
             
         });
 

@@ -1,15 +1,12 @@
 import argon2 from 'argon2';
 import Joi from 'joi';
-import { UserRole } from '../../../constants';
+// import { UserRole } from '../../../constants';
 // import bcrypt from 'bcryptjs';
 
-class InsertUserRequest {
+class LoginUserRequest {
     constructor(data) {
         this.email = data.email;
         this.password = null;
-        this.name = data.name;
-        this.role = UserRole.USER;
-        this.avatar = data.avatar;
         this.phone = data.phone;
     }
     async encryptPassword(password) {
@@ -27,12 +24,10 @@ class InsertUserRequest {
     static validate(data) {
         const schema = Joi.object({
             email: Joi.string().email().optional(),
-            password: Joi.string().min(6).optional(),
-            name: Joi.string().required(),
-            avatar: Joi.string().uri().allow("").optional(),
+            password: Joi.string().min(6).required(),
             phone: Joi.string().optional(),
         });
         return schema.validate(data)
     }
 }
-export default InsertUserRequest;
+export default LoginUserRequest;

@@ -20,6 +20,7 @@ import InsertProductRequest from './dtos/requests/product/InsertProductRequest';
 import UpdateProductRequest from './dtos/requests/product/UpdateProductRequest';
 import InsertOrderRequest from './dtos/requests/order/InsertOrderRequest';
 import UpdateOrderRequest from './dtos/requests/order/UpdateOrderRequest';
+import LoginUserRequest from './dtos/requests/user/LoginUserRequest';
 import InsertUserRequest from './dtos/requests/user/InsertUserRequest';
 import InsertNewsRequest from './dtos/requests/news/InsertNewsRequest';
 import UpdateNewsRequest from './dtos/requests/news/UpdateNewsRequest';
@@ -44,9 +45,13 @@ export function AppRoute(app) {
         validate(UpdateNewsRequest),
         asyncHandler(NewsController.updateNewsById));
     //User
-    router.post('/users',
+    router.post('/register',
         validate(InsertUserRequest),
-        asyncHandler(UserController.addUser));
+        asyncHandler(UserController.registerUser));
+    router.post('/login',
+        validate(LoginUserRequest),
+        asyncHandler(UserController.login));    
+
     // Product
     router.get('/products',
         paginate(5),

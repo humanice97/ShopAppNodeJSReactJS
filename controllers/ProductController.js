@@ -105,8 +105,19 @@ export async function getProductById(req, res) {
 
 // Thêm mới sản phẩm
 export async function addProduct(req, res) {
+  const { image, ...productData } = req.body;
+        if (image && Array.isArray(image)) {
+            image = JSON.stringify(image);
+        }
+
+        // 3. Tạo dữ liệu để lưu
+        const newProductData = {
+            ...productData,
+            image: image // Gán lại image đã xử lý
+        };
+  
     // Tạo sản phẩm mới từ req.body
-    const product = await db.Product.create(req.body);
+    const product = await db.Product.create(newProductData);
 
     // Trả về dữ liệu sản phẩm vừa thêm
     return res.status(201).json({
