@@ -16,6 +16,7 @@ import asyncHandler from './middlewares/asyncHandler';
 import validate from './middlewares/validate';
 import paginate from './middlewares/paginate';
 import uploadMultiple from './middlewares/uploadImage'
+import { requireRole } from './middlewares/auth';
 import InsertProductRequest from './dtos/requests/product/InsertProductRequest';
 import UpdateProductRequest from './dtos/requests/product/UpdateProductRequest';
 import InsertOrderRequest from './dtos/requests/order/InsertOrderRequest';
@@ -28,6 +29,7 @@ import InsertNewsDetailRequest from './dtos/requests/news-detail/InsertNewsDetai
 import InsertBannerRequest from './dtos/requests/banner/InsertBannerRequest';
 import UpdateBannerRequest from './dtos/requests/banner/UpdateBannerRequest';
 import InsertBannerDetailRequest from './dtos/requests/banner-detail/InsertBannerDetailRequest';
+import { UserRole } from './constants';
 
 export function AppRoute(app) {
     // News
@@ -60,34 +62,50 @@ export function AppRoute(app) {
         paginate(1),
         asyncHandler(ProductController.getProductById));
     router.post('/products',
+        requireRole([UserRole.ADMIN]),
         validate(InsertProductRequest),
         asyncHandler(ProductController.addProduct));
-    router.delete('/products/:id', asyncHandler(ProductController.deleteProductById));
+    router.delete('/products/:id',
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(ProductController.deleteProductById));
     router.put('/products/:id',
+        requireRole([UserRole.ADMIN]),
         validate(UpdateProductRequest),
         asyncHandler(ProductController.updateProductById));
 
     // Category
     router.get('/categories',
-        paginate(5),
+        paginate(10),
         asyncHandler(CategoryController.getCategory));
     router.get('/categories/:id',
         paginate(1),
         asyncHandler(CategoryController.getCategoryById));
-    router.post('/categories', asyncHandler(CategoryController.addCategory));
-    router.delete('/categories/:id', asyncHandler(CategoryController.deleteCategoryById));
-    router.put('/categories/:id', asyncHandler(CategoryController.updateCategoryById));
+    router.post('/categories',
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(CategoryController.addCategory));
+    router.delete('/categories/:id', 
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(CategoryController.deleteCategoryById));
+    router.put('/categories/:id', 
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(CategoryController.updateCategoryById));
 
     // Brand
     router.get('/brands',
-        paginate(5),
+        paginate(10),
         asyncHandler(BrandController.getBrand));
     router.get('/brands/:id',
         paginate(1),
         asyncHandler(BrandController.getBrandById));
-    router.post('/brands', asyncHandler(BrandController.addBrand));
-    router.delete('/brands/:id', asyncHandler(BrandController.deleteBrandById));
-    router.put('/brands/:id', asyncHandler(BrandController.updateBrandById));
+    router.post('/brands', 
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(BrandController.addBrand));
+    router.delete('/brands/:id', 
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(BrandController.deleteBrandById));
+    router.put('/brands/:id', 
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(BrandController.updateBrandById));
 
     // Order
     router.get('/orders', asyncHandler(OrderController.getOrder));

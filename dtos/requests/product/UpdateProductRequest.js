@@ -10,6 +10,7 @@ class UpdateProductRequest {
         this.specification = data.specification;
         this.buy_turn = data.buy_turn;
         this.quantity = data.quantity;
+        this.sku = data.sku;
         this.brand_id = data.brand_id;
         this.category_id = data.category_id;
     }
@@ -18,11 +19,12 @@ class UpdateProductRequest {
             name: Joi.string().optional(),
             price: Joi.number().positive().optional(),
             old_price: Joi.number().positive().optional(),
-            image: Joi.string().uri().allow("").optional(),
+            image: Joi.string().allow("").optional(),
             description: Joi.string().optional(),
             specification: Joi.string().optional(),
             buy_turn: Joi.number().integer().min(0).optional(),
             quantity: Joi.number().integer().min(0).optional(),
+            sku: Joi.string().optional(),
             brand_id: Joi.number().integer().optional(),
             category_id: Joi.number().integer().optional(),
         });

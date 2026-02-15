@@ -11,6 +11,40 @@ services:
       - "3306:3306"
     networks:
       - shopapp-online
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: shopapp-backend
+    container_name: backend_container
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+    environment:
+      DB_DEV_HOST: mysql
+      DB_DEV_PORT: 3306
+      DB_DEV_USERNAME: ${DB_DEV_USERNAME}
+      DB_DEV_PASSWORD: ${DB_DEV_PASSWORD}
+      DB_DEV_DATABASE: ${DB_DEV_DATABASE}
+      DB_DEV_DIALECT: ${DB_DEV_DIALECT}
+      PORT: ${PORT}
+      NODE_ENV: ${NODE_ENV}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      APPWRITE_BUCKET_ID: ${APPWRITE_BUCKET_ID}
+      APPWRITE_ENDPOINT: ${APPWRITE_ENDPOINT}
+      APPWRITE_PROJECT_ID: ${APPWRITE_PROJECT_ID}
+      APPWRITE_API_KEY: ${APPWRITE_API_KEY}
+    networks:
+      - shopapp-online
+    volumes:
+      - ./uploads:/app/uploads
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin_container
@@ -25,7 +59,11 @@ services:
       UPLOAD_LIMIT: 500M
     networks:
       - shopapp-online
+
 networks:
   shopapp-online:
     name: shopapp-online
     driver: bridge
+
+volumes:
+  mysql_data:

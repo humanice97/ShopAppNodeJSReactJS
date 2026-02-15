@@ -1,11 +1,16 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 require('dotenv').config()
 
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}))
 app.use(express.json())
-express.urlencoded({
+app.use(express.urlencoded({
     extended: true
-})
+}))
 import { AppRoute } from './AppRoute'
 app.get('/', (req, res) => {
   res.send('Hello World! this is my first shop app')

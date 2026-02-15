@@ -46,11 +46,11 @@ export async function getProduct(req, res) {
 export async function updateProductById(req, res) {
     const { id } = req.params;
     // Cập nhật sản phẩm theo id
-    const [updatedRows] = await db.Product.update(req.body, {
+    const updatedRows = await db.Product.update(req.body, {
       where: { id }
     });
   
-    if (updatedRows > 0) {
+    if (updatedRows[0] > 0) {
       return res.status(200).json({
         message: 'Update product success'
       });
@@ -66,7 +66,7 @@ export async function updateProductById(req, res) {
 export async function deleteProductById(req, res) {
     const { id } = req.params;
     // Xóa sản phẩm theo id
-    const [deleted] = await db.Product.destroy({
+    const deleted = await db.Product.destroy({
       where: { id }
     });
   
