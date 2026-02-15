@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+yarn-error.log
+.git
+.gitignore
+README.md
+.vscode
+.idea
+.DS_Store
+docker-compose*.yml
+Dockerfile
+.dockerignore
+*.md
+.editorconfig
+uploads/*
+!uploads/.gitkeep
