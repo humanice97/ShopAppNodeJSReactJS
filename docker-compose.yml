@@ -12,7 +12,7 @@ services:
     networks:
       - shopapp-online
     volumes:
-      - mysql_data:/var/lib/mysql
+      - shopapp_mysql_data:/var/lib/mysql
 
   backend:
     build:
@@ -66,4 +66,5 @@ networks:
     driver: bridge
 
 volumes:
-  mysql_data:
+  shopapp_mysql_data:
+    external: true
