@@ -4,7 +4,7 @@ const app = express()
 require('dotenv').config()
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'http://192.168.1.116','http://192.168.1.116:80','https://uzisport.pro.vn'],
     credentials: true
 }))
 app.use(express.json())
