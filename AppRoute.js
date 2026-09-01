@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 const router = express.Router();
 
 import * as ProductController from './controllers/ProductController';
@@ -12,6 +12,7 @@ import * as NewsDetailController from './controllers/NewsDetailController'
 import * as BannerController from './controllers/BannerController'
 import * as BannerDetailController from './controllers/BannerDetailController'
 import * as UploadImageAppWriteController from "./controllers/ImageController"
+import * as SettingsController from './controllers/SettingsController'
 import asyncHandler from './middlewares/asyncHandler';
 import validate from './middlewares/validate';
 import paginate from './middlewares/paginate';
@@ -176,6 +177,13 @@ router.delete('/banner-details/:id',
 router.put('/banner-details/:id',
     asyncHandler(BannerDetailController.updateBannerDetailById));
 
+
+// Settings
+    router.get('/settings', asyncHandler(SettingsController.getSettings));
+    router.put('/settings',
+        requireRole([UserRole.ADMIN]),
+        asyncHandler(SettingsController.updateSettings)
+    );
 
 ///// upload ảnh
 router.post("/upload/images",

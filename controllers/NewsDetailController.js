@@ -1,15 +1,19 @@
-import db, { Sequelize } from "../models";
+﻿import db, { Sequelize } from "../models";
 
 export async function getNewsDetail(req, res) {
     const { page, pageSize, offset } = req.pagination;
+    const { news_id } = req.query;
+
+    const whereClause = news_id ? { news_id } : {};
 
     const [details, total] = await Promise.all([
         db.NewsDetail.findAll({
+            where: whereClause,
             limit: pageSize,
             offset: offset,
-            // include: [{ model: db.News }, { model: db.Product }]
+            include: [{ model: db.Product }]
         }),
-        db.NewsDetail.count()
+        db.NewsDetail.count({ where: whereClause })
     ]);
 
     const totalPages = Math.ceil(total / pageSize);

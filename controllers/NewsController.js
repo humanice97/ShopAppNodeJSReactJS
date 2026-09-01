@@ -1,4 +1,4 @@
-import db from "../models";
+﻿import db from "../models";
 import { buildSearchQuery } from "../utils/buildSearchQuery";
 
 export async function getNews(req, res) {
@@ -56,19 +56,45 @@ export async function getNewsById(req, res) {
 
 export async function updateNewsById(req, res) {
     const { id } = req.params;
+    const { product_ids, ...updateData } = req.body;
 
-    const [updatedRows] = await db.News.update(req.body, {
-        where: { id }
-    });
+    const t = await db.sequelize.transaction();
+    try {
+        const [updatedRows] = await db.News.update(updateData, {
+            where: { id },
+            transaction: t
+        });
 
-    if (updatedRows > 0) {
-        return res.status(200).json({
-            message: 'Update news success'
-        });
-    } else {
-        return res.status(404).json({
-            message: 'News not found or no changes applied'
-        });
+        if (product_ids !== undefined) {
+            await db.NewsDetail.destroy({
+                where: { news_id: id },
+                transaction: t
+            });
+
+            if (Array.isArray(product_ids) && product_ids.length > 0) {
+                const detailsToInsert = product_ids.map(productId => ({
+                    news_id: id,
+                    product_id: productId
+                }));
+                await db.NewsDetail.bulkCreate(detailsToInsert, { transaction: t });
+            }
+        }
+
+        await t.commit();
+
+        if (updatedRows > 0 || product_ids !== undefined) {
+            return res.status(200).json({
+                message: 'Update news success'
+            });
+        } else {
+            return res.status(404).json({
+                message: 'News not found or no changes applied'
+            });
+        }
+    } catch (error) {
+        await t.rollback();
+        console.error("Error in updateNewsById:", error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 }
 
