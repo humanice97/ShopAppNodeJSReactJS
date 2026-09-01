@@ -3,12 +3,26 @@ import { buildSearchQuery } from "../utils/buildSearchQuery";
 
 // Lấy danh sách sản phẩm, có hỗ trợ tìm kiếm và phân trang
 export async function getProduct(req, res) {
-    const { search = '' } = req.query;
+     const { search = '', categoryId, brandId, minPrice, maxPrice } = req.query; 
     const { page, pageSize, offset } = req.pagination;
+    const { Op } = db.Sequelize;
 
     // Dùng thêm hàm helper để tái sử dụng đối với tìm kiếm bằng từ khóa
     const whereClause = buildSearchQuery(search, ['name', 'description', 'specification']);
 
+     if (categoryId && categoryId !== '0') {
+        whereClause.category_id = categoryId;
+    }
+
+    if (brandId && brandId !== '0') {
+        whereClause.brand_id = brandId;
+    }
+
+    if (minPrice || maxPrice) {
+        whereClause.price = {};
+        if (minPrice) whereClause.price[Op.gte] = Number(minPrice);
+        if (maxPrice) whereClause.price[Op.lte] = Number(maxPrice);
+    }
     // Dùng promise để thực hiện 2 truy vấn song song để cải thiện hiệu suất
     const [products, totalProducts] = await Promise.all([
         db.Product.findAll({
@@ -46,11 +60,11 @@ export async function getProduct(req, res) {
 export async function updateProductById(req, res) {
     const { id } = req.params;
     // Cập nhật sản phẩm theo id
-    const updatedRows = await db.Product.update(req.body, {
+    const [updatedRows] = await db.Product.update(req.body, {
       where: { id }
     });
   
-    if (updatedRows[0] > 0) {
+    if (updatedRows > 0) {
       return res.status(200).json({
         message: 'Update product success'
       });
@@ -102,10 +116,19 @@ export async function getProductById(req, res) {
         data: product
     });
 }
+export async function getProductBySlug(req, res) {
+    const { slug } = req.params;
+    const product = await db.Product.findOne({ where: { slug } });
+    if (!product) {
+        return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+    }
+    return res.status(200).json({ data: product });
+}
+
 
 // Thêm mới sản phẩm
 export async function addProduct(req, res) {
-  const { image, ...productData } = req.body;
+  let { image, ...productData } = req.body;
         if (image && Array.isArray(image)) {
             image = JSON.stringify(image);
         }

@@ -58,6 +58,9 @@ export function AppRoute(app) {
     router.get('/products',
         paginate(5),
         asyncHandler(ProductController.getProduct));
+    router.get('/products/slug/:slug', 
+        asyncHandler(ProductController.getProductBySlug));
+
     router.get('/products/:id',
         paginate(1),
         asyncHandler(ProductController.getProductById));

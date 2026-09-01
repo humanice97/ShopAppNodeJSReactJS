@@ -25,6 +25,7 @@ class InsertProductRequest {
             buy_turn: Joi.number().integer().min(0),
             quantity: Joi.number().integer().min(0),
             sku: Joi.string().optional(),
+            slug: Joi.string().allow("").optional(),
             brand_id: Joi.number().integer().required(),
             category_id: Joi.number().integer().required(),
         });

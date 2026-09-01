@@ -25,6 +25,7 @@ class UpdateProductRequest {
             buy_turn: Joi.number().integer().min(0).optional(),
             quantity: Joi.number().integer().min(0).optional(),
             sku: Joi.string().optional(),
+            slug: Joi.string().allow("").optional(),
             brand_id: Joi.number().integer().optional(),
             category_id: Joi.number().integer().optional(),
         });
